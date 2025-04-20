@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wavefunctions of Harmonic Oscillator</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <h2>Wavefunctions of Quantum Harmonic Oscillator</h2>
+  <label for="nValue">Choose quantum number (n): </label>
+  <select id="nValue">
+    <option value="0">n = 0</option>
+    <option value="1">n = 1</option>
+    <option value="2">n = 2</option>
+    <option value="3">n = 3</option>
+    <option value="4">n = 4</option>
+    <option value="5">n = 5</option>
+  </select>
+  <div id="plot" style="width:100%;max-width:700px;height:400px;"></div>
+
+  <script>
+    function factorial(n) {
+      return n <= 1 ? 1 : n * factorial(n - 1);
+    }
+
+    // Define Hermite polynomials manually up to n=3
+    function hermite(n, x) {
+      switch(n) {
+        case 0: return 1;
+        case 1: return 2 * x;
+        case 2: return 4 * x * x - 2;
+        case 3: return 8 * x**3 - 12 * x;
+        case 4: return 16*x**4 - 48*x**2 + 12;
+        case 5: return 32*x**5 -160*x**3 +120*x
+        default: return 0;
+      }
+    }
+
+    function phi(n, x) {
+      const zeta = x; // assume alpha = 1 for normalized units
+      const Hn = hermite(n, zeta);
+      const norm = 1 / Math.sqrt(Math.pow(2, n) * factorial(n) * Math.sqrt(Math.PI));
+      return norm * Hn * Math.exp(-zeta * zeta / 2);
+    }
+
+    function plotWavefunction(n) {
+      const x = [];
+      const y = [];
+
+      for (let i = -50; i <= 50; i++) {
+        const xi = i / 10;
+        x.push(xi);
+        y.push(phi(n, xi));
+      }
+
+      const trace = {
+        x: x,
+        y: y,
+        mode: 'lines',
+        line: { color: 'crimson' },
+        name: `ϕ_${n}(x)`
+      };
+
+      const layout = {
+        title: `Wavefunction ϕ<sub>${n}</sub>(x)`,
+        xaxis: { title: 'x', range: [-5, 5] },
+        yaxis: { title: 'ϕ(x)' }
+      };
+
+      Plotly.newPlot('plot', [trace], layout);
+    }
+
+    const select = document.getElementById('nValue');
+    select.addEventListener('change', () => {
+      const n = parseInt(select.value);
+      plotWavefunction(n);
+    });
+
+    // Initial plot
+    plotWavefunction(0);
+  </script>
+</body>
+</html>

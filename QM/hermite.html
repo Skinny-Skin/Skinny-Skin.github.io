@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hermite Polynomial Plot</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 20px;
+    }
+    #plot {
+      width: 100%;
+      max-width: 700px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Hermite Polynomial Visualization</h2>
+<label for="nValue">Select n (Order): </label>
+<input type="range" id="nValue" min="0" max="5" value="0" oninput="updatePlot(this.value)">
+<span id="nDisplay">0</span>
+
+<div id="plot"></div>
+
+<script>
+  function hermite(n, zeta) {
+    if (n === 0) return 1;
+    if (n === 1) return 2 * zeta;
+    if (n === 2) return (4 * zeta * zeta) - 2 ;
+    if (n===3) return (8*zeta**3 - 12*zeta);
+    if (n===4) return (16*zeta**4 -48*zeta**2 + 12);
+    if (n===5) return (32*zeta**5 - 160*zeta**3 + 120*zeta);
+
+  }
+
+  function updatePlot(n) {
+    document.getElementById("nDisplay").innerText = n;
+    n = parseInt(n);
+
+    const zeta = [];
+    const values = [];
+    for (let x = -1.5; x <= 1.5; x += 0.1) {
+      zeta.push(x);
+      values.push(hermite(n, x));
+    }
+
+    const trace = {
+      x: zeta,
+      y: values,
+      type: 'scatter',
+      mode: 'lines',
+      name: `H_${n}(ζ)`,
+      line: { color: 'purple' }
+    };
+
+    const layout = {
+      title: `Hermite Polynomial H<sub>${n}</sub>(ζ)`,
+      xaxis: { title: 'ζ (zeta)' },
+      yaxis: { title: `H_${n}(ζ)` }
+    };
+
+    Plotly.newPlot('plot', [trace], layout);
+  }
+
+  updatePlot(0); // Initialize with H₀
+</script>
+
+</body>
+</html>

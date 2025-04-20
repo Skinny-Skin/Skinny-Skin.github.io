@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quantum Harmonic Oscillator</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body {
+      font-family: 'Georgia' ,serif;
+      padding: 30px;
+      background: #f9f9f9;
+      color: #333;
+      font-size: 20px;
+      line-height: 1.7;
+    }
+    h1, h2 {
+      color: #004080;
+    }
+    .equation {
+      background: #eef3ff;
+      padding: 10px;
+      border-left: 4px solid #004080;
+      margin: 20px 0;
+      font-size: 1.2em;
+    }
+    html {
+    scroll-behavior: smooth;
+  }
+  </style>
+</head>
+<body>
+
+  <h1>Quantum Harmonic Oscillator</h1>
+
+  <p>We begin with the time-independent Schrödinger equation:</p>
+
+  <div class="equation">
+    $$ \hat{H} \phi(x) = E \phi(x) $$
+  </div>
+
+  <p>For the quantum harmonic oscillator, the Hamiltonian operator is:</p>
+
+  <div class="equation">
+    $$ \hat{H} = -\frac{\hbar^2}{2m} \frac{d^2}{dx^2} + \frac{1}{2} m \omega^2 x^2 $$
+  </div>
+
+  <p>This gives us the differential equation:</p>
+
+  <div class="equation">
+    $$ -\frac{\hbar^2}{2m} \frac{d^2 \phi(x)}{dx^2} + \frac{1}{2} m \omega^2 x^2 \phi(x) = E \phi(x) $$
+  </div>
+  <p>Multiply \(-\frac{2}{\hbar\omega}\) both sides we get 
+    $$ \frac{\hbar}{m\omega} \frac{d^2 \phi(x)}{dx^2} - \frac{m \omega}{\hbar} x^2 \phi(x) = -\frac{2E}{\hbar\omega}\phi(x) $$
+</p>
+  <p>To simplify this, we use a substitution:</p>
+
+  <ul>
+    <li>Let \( \alpha^2 = \frac{m \omega}{\hbar} \), where \( \alpha \) has units of \( 1/L \)</li>
+    <li id="hi">Let \( \zeta = \alpha x \)</li>
+    <li>Let \( \lambda = \frac{2E}{\hbar \omega} \)</li>
+  </ul>
+  <div class="equation">
+    $$ \frac{d^2}{dx^2} = \frac{d}{dx}(\frac{d}{dx}) $$
+    $$ \frac{d}{d\zeta}(\frac{d}{dx})\frac{d\zeta}{dx} =  \frac{d}{d\zeta}(\frac{d}{dx})\alpha $$
+    $$ \frac{d}{d\zeta}(\frac{d}{dx})\alpha = \frac{d}{d\zeta}(\frac{d}{d\zeta}\frac{d\zeta}{dx})\alpha $$
+    $$ \implies \alpha^2 \frac{d^2}{d\zeta^2}$$
+  </div>
+  <p>Substituting into the equation, we get:</p>
+
+  <div class="equation">
+    $$ \frac{d^2 \phi}{d\zeta^2} + (\lambda - \zeta^2)\phi = 0 $$
+  </div>
+
+  <p id="plot1">This is a second-order differential equation that we will solve in the next section.</p>
+  <iframe src="index2.html" width="100%" height="500px" style="border: none;"></iframe>
+  <div style="margin-top: 30px;">
+    <h2>Asymptotic Solution for Large Frequency</h2>
+    <p>
+      We now consider solving the equation for the case where the angular frequency \( \omega \) is very large. 
+      This implies from our earlier substitution:
+      <br><br>
+      \[
+      \lambda = \frac{2E}{\hbar \omega} \to 0 \quad \text{and} \quad \zeta \to \infty
+      \]
+    </p>
+    <p>
+      The simplified form of the equation becomes:
+      <br><br>
+      <div class="equation" > \[
+      \frac{d^2 \phi}{d\zeta^2} - \zeta^2 \phi = 0
+      \]
+      </div>
+    </p>
+  
+    <p>
+      This differential equation can be solved by inspection, and one of its solutions is:
+      <br><br>
+      \[
+      \phi(\zeta) = e^{-\zeta^2/2}
+      \]
+    </p>
+  
+    <p>
+      We justify this by assuming:
+      \[
+      \zeta^2 e^{-\zeta^2/2} \gg e^{-\zeta^2/2}
+      \]
+      which is true when \( \zeta \gg 1 \), confirming our approximation.
+    </p>
+  
+    <p>
+      Now, we try a more general form of the solution:
+      <br><br>
+      \[
+      \phi(\zeta) = \zeta^p e^{-\zeta^2/2}
+      \]
+      <br>
+      Let us verify that this form is a solution for any positive integer \( p \), by taking \( p = 2 \).
+    </p>
+  
+    <p>
+      Let \( \phi(\zeta) = \zeta^2 e^{-\zeta^2/2} \), then:
+      <br><br>
+      \[
+      \phi' = \left(2\zeta - \zeta^3\right)e^{-\zeta^2/2}, \quad
+      \phi'' = \left(2 - 5\zeta^2 + \zeta^4\right)e^{-\zeta^2/2}
+      \] which further imples that \(\phi'' = \left(\zeta^4\right)e^{-\zeta^2/2}\)
+    </p>
+  
+    <p>
+      Now plug into the simplified equation:
+      <br><br>
+      \[
+      \phi'' - \zeta^2 \phi = \left(\zeta^4 - \zeta^4 \right)e^{-\zeta^2/2} = 0
+      \]
+      <br>
+      Hence verified. So, for any polynomial \( H(\zeta) = \zeta^p \), the solution:
+      <br><br>
+      \[
+      \phi(\zeta) = H(\zeta)e^{-\zeta^2/2}
+      \]
+      <br>
+      satisfies the original equation.
+    </p>
+  
+    <p>
+      Therefore, the general solution is:
+      <br><br>
+      \[
+      \phi(\zeta) = e^{-\zeta^2/2} H(\zeta)
+      \]
+      <br>
+      where \( H(\zeta) \) is a polynomial known as a <strong>Hermite polynomial</strong>.
+    </p>
+  
+    <h3>Obtaining the Hermite Differential Equation</h3>
+    <p>
+      Now substitute this form of \( \phi(\zeta) \) into the original differential equation:
+      <br><br>
+      \[
+      \frac{d^2\phi}{d\zeta^2} + (\lambda - \zeta^2)\phi = 0
+      \]
+    </p>
+    <p>
+      Calculating derivatives:
+      <br><br>
+      \[
+      \phi = H(\zeta) e^{-\zeta^2/2}, \quad
+      \phi' = \left(H' - \zeta H\right) e^{-\zeta^2/2}, \quad
+      \phi'' = \left(H'' - 2\zeta H' + (\zeta^2 - 1)H \right) e^{-\zeta^2/2}
+      \]
+    </p>
+  
+    <p>
+      Substitute into the differential equation:
+      <br><br>
+      \[
+      \left[H'' - 2\zeta H' + (\zeta^2 - 1)H + (\lambda - \zeta^2)H\right] e^{-\zeta^2/2} = 0
+      \]
+    </p>
+  
+    <p>
+      Simplifying:
+    </p>
+    <div class="equation">
+      \[
+      H'' - 2\zeta H' + (\lambda - 1)H = 0
+      \]
+    </div>
+      <br>
+      This is the <strong>Hermite differential equation</strong>.
+<p>
+        We will now solve the Hermite differential equation using <strong><span style="color: #06386a;"> Power Series Method</span></strong>.
+</p>
+<h2>Solving the Hermite Differential Equation using Power Series</h2>
+
+<p>We are given the Hermite differential equation:</p>
+
+<p>
+  \[
+    H''(\zeta) - 2\zeta H'(\zeta) + (\lambda - 1) H(\zeta) = 0
+  \]
+</p>
+
+<p>Assume a power series solution:</p>
+
+<p>
+  \[
+    H(\zeta) = \sum_{k=0}^{\infty} c_k \zeta^k
+  \]
+</p>
+
+<p>Then:</p>
+
+<p>
+  \[
+    H'(\zeta) = \sum_{k=0}^{\infty} k c_k \zeta^{k-1}, \quad
+    H''(\zeta) = \sum_{k=0}^{\infty} k(k-1) c_k \zeta^{k-2}
+  \]
+</p>
+
+<p>Now substitute into the Hermite equation:</p>
+
+<p>
+  \[
+    \sum_{k=0}^{\infty} k(k-1)c_k \zeta^{k-2}
+    - 2\zeta \sum_{k=0}^{\infty} k c_k \zeta^{k-1}
+    + (\lambda - 1) \sum_{k=0}^{\infty} c_k \zeta^k = 0
+  \]
+</p>
+
+<p>Simplify the middle term:</p>
+
+<p>
+  \[
+    -2\zeta \sum_{k=0}^{\infty} k c_k \zeta^{k-1}
+    = -2 \sum_{k=0}^{\infty} k c_k \zeta^{k}
+  \]
+</p>
+
+<p>Now shift indices to match all powers:</p>
+
+<ul>
+  <li>Let \( n = k - 2 \) in the first sum</li>
+  <li>Let \( n = k \) in the others</li>
+</ul>
+
+<p>
+  \[
+    \sum_{n=0}^{\infty} (n+2)(n+1)c_{n+2} \zeta^n
+    - 2\sum_{n=0}^{\infty} n c_n \zeta^n
+    + (\lambda - 1) \sum_{n=0}^{\infty} c_n \zeta^n = 0
+  \]
+</p>
+
+<p>Group all the terms:</p>
+
+<p>
+  \[
+    \sum_{n=0}^{\infty} \left[ (n+2)(n+1) c_{n+2}
+    - 2n c_n + (\lambda - 1) c_n \right] \zeta^n = 0
+  \]
+</p>
+
+<p>For the power series to vanish identically, each coefficient must vanish:</p>
+
+<p>
+  \[
+    (n+2)(n+1) c_{n+2} = \left[ 2n - (\lambda - 1) \right] c_n
+  \]</p>
+
+<p id="relation">This is the <strong>recurrence relation</strong>:</p>
+
+<p>
+  \[
+    c_{n+2} = \frac{[2n - (\lambda - 1)]}{(n+2)(n+1)} c_n
+  \]
+</p>
+
+<p>Using this, we can recursively compute all coefficients of the Hermite polynomial.</p>
+<p> Hence Polynomial \( H(\zeta) \) might look like :</p>
+<div class="equation";> 
+    \[
+    H(\zeta)=(c_0+c_2\zeta^2+c_4\zeta^4+c_6\zeta^6+....+c_{2p}\zeta^{2p}+....)+\zeta(c_1+c_3\zeta^2+c_5\zeta^4+c_7\zeta^6+....+c_{2q+1}\zeta^{2q}+....)
+    \]
+</div>
+<p>From recursive relation we can say coefficients of <strong>odd power</strong> of \(\zeta\) are independent of coefficients <strong>even power</strong> of \(\zeta\), Hence we can write,\(H(\zeta) = H_{e}(\zeta) + H_{o}(\zeta)\) where each represents Even and Odd function of \(\zeta\).</p>
+<p>Also note that for latter part of the series, the ratio of the consecutive coefficient i.e.</p>
+    \[
+        \underset {n \to \infty}{\lim} \frac{c_{n+2}}{c_n}=\frac{1}{n}
+
+    \]
+which is same as the ratio of the cosecutive coefficient for 
+    \[
+    e^{\zeta^2}=\sum_{k=0}^{\infty} c_k \zeta^{2k}, \quad
+    c_k = \frac{1}{k!}
+    \]
+    
+    \[
+    \underset {k \to \infty}{\lim} \frac{c_{k+1}}{c_k}=\frac{1}{k}
+    \]
+    <br></br>
+Hence for larger values of \(n\) both \(H_e(\zeta)\) and  \(H_o(\zeta)\) will behave like \(e^{\zeta^2}\) and \(\zeta e^{\zeta^2}\) recpectivily. This implies:
+<div class="equation";>
+    \[
+    \phi_{e}(\zeta) = e^{-\frac{\zeta^2}{2}}e^{\zeta^2} = e^{\zeta^2/2} \quad \text{and}
+    \] 
+    \[
+    \phi_{o}(\zeta) = \zeta e^{-\frac{\zeta^2}{2}}e^{\zeta^2} = \zeta e^{\zeta^2/2}
+    \]
+</div>
+Clearly both \(\phi_e(\zeta)\) and  \(\phi_o(\zeta)\) diverges in this case (when \(n \rightarrow \infty\)), but we don't want diverging Wave function for the Harmonic Oscillator.
+Hence we can conculde that both \(H_e(\zeta)\) and  \(H_o(\zeta)\) has to <strong>terminate</strong> some where in the series!
+In order for the series to be terminate, there must exist a coefficient which is equal to zero. Let \(c_{n+2} = 0\) clearly then all next terms will be zero as well!
+For condition for \(c_{n+2} = 0\) recall  <a href="#relation"><strong>recurrence relation</strong></a> :
+  <p>
+    \[
+      0 = \frac{[2n - (\lambda - 1)]}{(n+2)(n+1)} c_n \implies \lambda = 2n+1
+    \]
+  </p>
+<p>So our \(\lambda = 2n+1 \) will ensure that the series will terminate with last coefficient equal to \( c_n \) </p>
+<p> Also recall from our <a href="#hi">subtitution</a> \(E = \frac{\lambda \hbar \omega}{2} \)</p>
+
+<h2> Writing Solutions for the Simple Harmonic Oscillator</h2>
+<p>
+<strong>Ground State</strong>:
+\[
+\text{take} \quad n = 0  \implies \lambda = 1 
+\]
+hence \[ \forall \quad \text{even}  \quad n \geq 2, c_{n}=0 \quad \text{and} \quad H_0(\zeta)=c_0 \implies \phi_0(\zeta) = c_0 e^{-\zeta^2/2} \] with Energy <strong>\(E_0 = \frac{\hbar \omega}{2}\)</strong>.
+</p>
+        <strong>First Excited State</strong>:
+        \[
+        \text{take} \quad n = 1  \implies \lambda = 3 
+        \]
+        hence \[ \forall \quad \text{odd} \quad n \geq 3, c_{n}=0 \quad \text{and} \quad H_1(\zeta)=c_1\zeta \implies \phi_1(\zeta) = c_1 \zeta e^{-\zeta^2/2} \] with Energy <strong>\(E_1 = \frac{3 \hbar \omega}{2}\)</strong>.
+        </p>
+<p>
+        <strong>Second Excited State</strong>:
+        \[
+        \text{take} \quad n = 2  \implies \lambda = 5 
+        \]
+        hence \[ \forall \quad \text{even} \quad n \geq 4, c_{n}=0 \quad \text{and} \quad H_2(\zeta)=(c_0+c_2\zeta^2)\implies \phi_2(\zeta) = c_0 (1-2 \zeta^2) e^{-\zeta^2/2} \] with Energy <strong>\(E_1 = \frac{5 \hbar \omega}{2}\)</strong>.
+        </p>
+</p>
+        <strong>Third Excited State</strong>:
+        \[
+        \text{take} \quad n = 3  \implies \lambda = 7 
+        \]
+        hence \[ \forall \quad \text{odd} \quad n \geq 5, c_{n}=0 \quad \text{and} \quad H_3(\zeta)=c_1\zeta + c_3\zeta^3 \implies \phi_3(\zeta) = c_1(\zeta-\frac{2}{3}\zeta^3) e^{-\zeta^2/2} \] with Energy <strong>\(E_1 = \frac{7 \hbar \omega}{2}\)</strong>.
+        </p>
+and SO ON...
+<p>These \( H_0(\zeta), H_1(\zeta), H_2(\zeta), H_3(\zeta)\) are called Hermite Polynomial, but they had to be Normalised first. Which in <strong>short</strong> can be done by replacing the coefficient of Highest order \(\zeta\) of \(H_n(\zeta)\) by \(2^n\) and finding corresponding \(c_0\) or \(c_1\). Hence: </p>
+<div class="equation";>
+\[
+H_0 = 1 , \quad H_1 = 2\zeta , \quad H_2 = 4\zeta^2 - 2 , \quad H_3 = 8\zeta^3 - 12\zeta
+\]
+</div>
+<p> Plot of some of the Hermite Polynomial is given below: </p>
+<iframe src="hermite.html" width="100%" height="500px" style="border: none;"></iframe>
+<p> Mathematicians had also found different ways to generate Hermite Polynomials, </p>
+<div class="equation"; id="ways">
+    \[
+    e^{\zeta^2/2}(\zeta - \frac {d}{d\zeta})^N e^{-\zeta^2/2} = H_N(\zeta) 
+    \]
+    \[
+    e^{-s^2+\zeta s} = \sum_{N=0}^{\infty} \frac{s^N}{N!}H_n(\zeta)
+    \]
+</div>
+<p> Hence from all these effort we are able of find Wave Function for Simple Harmonic Oscillator, which after replacing all subtitution will give back the function as: </p>
+<div class="equation";>
+    \[
+    \phi_n(x) = H_n(\sqrt {\frac{m\omega}{\hbar}} x) e^{-m \omega x^2 /2 \hbar} \quad \text{with Energy} \quad E_n = (n+\frac{1}{2})\hbar \omega
+    \]
+</div>
+<p> the behaviour of this function for some values of \(n\) is already <a href="#plot1">shown</a>.</p>
+
+</html>
