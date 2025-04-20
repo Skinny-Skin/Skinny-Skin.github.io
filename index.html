@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project Explorer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Montserrat', sans-serif;
+      overflow: hidden;
+    }
+
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .stars {
+      width: 2px;
+      height: 2px;
+      background: white;
+      position: absolute;
+      animation: moveStars 10s linear infinite;
+    }
+
+    @keyframes moveStars {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    .landing {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      padding: 0 20px;
+      z-index: 1;
+      position: relative;
+    }
+
+    .landing h1 {
+      font-size: 3em;
+      margin-bottom: 0.5em;
+    }
+
+    .landing p {
+      font-size: 1.2em;
+      max-width: 600px;
+      margin-bottom: 2em;
+    }
+
+    .project-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      justify-content: center;
+    }
+
+    .project-links a {
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      border: 1px solid #fff;
+      backdrop-filter: blur(5px);
+      transition: 0.3s ease;
+    }
+
+    .project-links a:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1em;
+      background: rgba(0, 0, 0, 0.4);
+      color: #ccc;
+      font-size: 0.9em;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    @media (max-width: 600px) {
+      .landing h1 {
+        font-size: 2em;
+      }
+
+      .project-links a {
+        font-size: 0.9em;
+        padding: 10px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background" id="background"></div>
+
+  <section class="landing">
+    <h1>Project Explorer</h1>
+    <p>Welcome! Choose a project below to explore interactive learning experiences created by me.</p>
+    <div class="project-links">
+      <a href="quantum-mechanics/index.html">Quantum Mechanics</a>
+      <a href="#">Project 2 (Coming Soon)</a>
+      <a href="#">Project 3 (Coming Soon)</a>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 · My Educational Projects · NISER India
+  </footer>
+
+  <script>
+    // Create twinkling stars
+    const background = document.getElementById('background');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.classList.add('stars');
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.animationDuration = `${3 + Math.random() * 7}s`;
+      star.style.opacity = Math.random();
+      background.appendChild(star);
+    }
+  </script>
+
+</body>
+</html>
