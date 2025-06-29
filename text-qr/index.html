@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Generator</h1>
+        <textarea id="text-input" placeholder="Enter your message..."></textarea>
+        <br>
+        <button onclick="generateQR()">Generate QR</button>
+
+        <div id="qr-output">
+            <img id="qr-img" src="" alt="Your QR Code" style="display:none;">
+            <br>
+            <button id="share-btn" style="display:none;">Copy QR as Base64</button>
+            <button id="download-btn" style="display:none;">Download QR</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Section -->
+    <script>
+        async function generateQR() {
+            const text = document.getElementById('text-input').value;
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ text: text })
+            });
+
+            const result = await response.json();
+
+            const qrImg = document.getElementById('qr-img');
+            const shareBtn = document.getElementById('share-btn');
+            const downloadBtn = document.getElementById('download-btn');
+
+            qrImg.src = result.image;
+            qrImg.style.display = 'block';
+
+            shareBtn.style.display = 'inline-block';
+            downloadBtn.style.display = 'inline-block';
+
+            // Copy base64 string to clipboard
+            shareBtn.onclick = function () {
+                navigator.clipboard.writeText(result.image)
+                    .then(() => alert("QR code copied to clipboard as base64 image!"))
+                    .catch(err => alert("Error copying QR code: " + err));
+            };
+
+            // Download QR code
+            downloadBtn.onclick = function () {
+                const a = document.createElement("a");
+                a.href = result.image;
+                a.download = "qr_code.png";
+                a.click();
+            };
+        }
+    </script>
+</body>
+</html>
