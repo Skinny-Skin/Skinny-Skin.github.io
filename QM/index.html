@@ -25,10 +25,55 @@
       border-left: 4px solid #004080;
       margin: 20px 0;
       font-size: 1.2em;
+       min-width: fit-content;
     }
     html {
-    scroll-behavior: smooth;
-  }
+      scroll-behavior: smooth;
+    }
+    iframe {
+       width:100%;
+       border: none;
+    }
+
+    #go-back {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #eef3ff, #004080);
+      border: none;
+      font-weight: bold;
+      font-size: 1rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #go-back:hover { transform: translateX(-50%) scale(1.1); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+    #go-back:active { transform: translateX(-50%) scale(0.95); }
+    #theme-change {
+      all: unset;
+      position: absolute;
+      top: 1%; right: 1%;
+      background: transparent;
+      z-index: 1;
+    }
+    #theme-change::before {
+      content: "🌑";
+    }
+    body.dark , body.dark iframe body {
+      color: #f9f9f9;
+      background: #333;
+    }
+    body.dark .equation {
+      background-color: #004080;
+      border-left: 4px solid #eef3ff;
+    }
+    body.dark #theme-change::before {
+      content: "☀️";
+    }
   </style>
 </head>
 <body>
@@ -75,8 +120,8 @@
   </div>
 
   <p id="plot1">This is a second-order differential equation that we will solve in the next section.</p>
-  <iframe src="index2.html" width="100%" height="500px" style="border: none;"></iframe>
-  <div style="margin-top: 30px;">
+  <iframe src="index2.html" height="500px"></iframe>
+  <div>
     <h2>Asymptotic Solution for Large Frequency</h2>
     <p>
       We now consider solving the equation for the case where the angular frequency \( \omega \) is very large. 
@@ -360,7 +405,7 @@ H_0 = 1 , \quad H_1 = 2\zeta , \quad H_2 = 4\zeta^2 - 2 , \quad H_3 = 8\zeta^3 -
 \]
 </div>
 <p> Plot of some of the Hermite Polynomial is given below: </p>
-<iframe src="hermite.html" width="100%" height="500px" style="border: none;"></iframe>
+<iframe src="hermite.html" height="575px"></iframe>
 <p> Mathematicians had also found different ways to generate Hermite Polynomials, </p>
 <div class="equation"; id="ways">
     \[
@@ -378,4 +423,24 @@ H_0 = 1 , \quad H_1 = 2\zeta , \quad H_2 = 4\zeta^2 - 2 , \quad H_3 = 8\zeta^3 -
 </div>
 <p> the behaviour of this function for some values of \(n\) is already <a href="#plot1">shown</a>.</p>
 
+</div>
+
+<!--Back Button-->
+<button id="go-back" onclick="window.history.back()" hidden>Back</button>
+<button id="theme-change" onclick="document.body.classList.toggle('dark')" title="change theme"></button>
+<script>
+  const backBtn = document.getElementById("go-back");
+  const themeBtn = document.getElementById("theme-change");
+
+  window.addEventListener("hashchange", () => backBtn.hidden = window.location.hash === "");
+  window.addEventListener("beforeunload", () => sessionStorage.setItem("QM-theme", document.body.className))
+  window.addEventListener("DOMContentLoaded", () => document.body.className = sessionStorage.getItem("QM-theme") ?? "")
+  let lastScrollY = window.scrollY;
+  window.addEventListener("scroll", () => {
+    const currentScrollY = window.scrollY;
+    themeBtn.style.position = currentScrollY < lastScrollY ? "fixed" : "absolute";
+    lastScrollY = currentScrollY;
+  });
+</script>
+</body>
 </html>
