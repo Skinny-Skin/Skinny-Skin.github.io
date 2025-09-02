@@ -9,12 +9,12 @@
 <body class="theme-default">
 
   <header>
-    <h1 style="position: relative;">
+    <h1>
     ✨ Matrix Calculator
     <span class="tooltip-wrapper">
       <button id="info-btn">ℹ️</button>
       <span class="tooltip-text">
-        This calculator allows you to perform matrix operations like multiplication, inversion, solving systems, and calculating determinants.
+        This calculator allows you to perform matrix operations like multiplication, inversion, solving systems, and calculating determinants.<br>
         (<i>More operations will be added in the future</i>)
       </span>
     </span>
@@ -34,39 +34,34 @@
 
   <main>
     <section class="card">
-      <h2>Select Operation</h2>
-      <label for="operation">Operation:</label>
-      <select id="operation">
-        <option value="multiply">Matrix Multiplication</option>
-        <option value="solve">Solve System (Gauss-Jordan)</option>
-        <option value="det">Determinant</option>
-        <option value="inverse">Inverse</option>
-      </select>
-    </section>
-
-    <section class="card">
+      <label for="operation" style="margin: 0;">
+        <h2>Select Operation: 
+          <select id="operation">
+            <option value="multiply">Matrix Multiplication</option>
+            <option value="solve">Solve System (Gauss-Jordan)</option>
+            <option value="det">Determinant</option>
+            <option value="inverse">Inverse</option>
+          </select>
+        </h2>
+      </label>
       <h2>Matrix Input</h2>
-
-      <label for="rowsA">Rows (A):</label>
-      <input type="number" id="rowsA" min="1" value="2" />
-
-      <label for="colsA">Cols (A):</label>
-      <input type="number" id="colsA" min="1" value="2" />
-
-      <div id="matrixB-dimensions">
-        <label for="rowsB" id="rowsB-label">Rows (B):</label>
-        <input type="number" id="rowsB" min="1" value="2" />
-
-        <label for="colsB" id="colsB-label">Cols (B):</label>
-        <input type="number" id="colsB" min="1" value="2" />
+      <div id="matrixA-dimensions">
+        <label for="rowsA">Rows (A): <input type="number" id="rowsA" min="1" value="2" /></label>
+        <label for="colsA">Cols (A): <input type="number" id="colsA" min="1" value="2" /></label>
       </div>
 
-      <button id="generate" type="button">Generate Matrices</button>
+      <div id="matrixB-dimensions">
+        <label for="rowsB" id="rowsB-label">Rows (B): <input type="number" id="rowsB" min="1" value="2" /></label>
+        <label for="colsB" id="colsB-label">Cols (B): <input type="number" id="colsB" min="1" value="2" /></label>
+      </div>
+
+      <button id="generate-null" type="button">Generate null Matrices</button>
+      <button id="generate-random" type="button">Generate random Matrices</button>
     </section>
 
     <section id="matrix-inputs" class="card"></section>
 
-    <section class="card">
+    <section id="matrix-result" class="card" hidden>
       <button id="compute" type="button">Compute</button>
       <button id="clear" type="button">Clear</button>
       <h2>Result</h2>

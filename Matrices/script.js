@@ -14,16 +14,16 @@ function updateTheme() {
 themeSelect.addEventListener("change", updateTheme);
 darkToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
-  updateTheme();
+  darkToggle.innerText = document.body.classList.contains("dark") ? "☀️ Light Mode": "🌙 Dark Mode";
 });
 
 
-function generateMatrixInputs(rows, cols, id) {
+function generateMatrixInputs(rows, cols, id, random=false) {
   let html = `<h3>Matrix ${id}</h3><div class="matrix-wrapper"><table>`;
   for (let i = 0; i < rows; i++) {
     html += "<tr>";
     for (let j = 0; j < cols; j++) {
-      html += `<td><input type="number" id="${id}-${i}-${j}" value="0" /></td>`;
+      html += `<td><input type="number" id="${id}-${i}-${j}" value="${random ? Math.floor(Math.random() * 10): 0}" /></td>`;
     }
     html += "</tr>";
   }
@@ -86,7 +86,7 @@ function determinant(A) {
 
 function inverse(A) {
   const n = A.length;
-  if (determinant(A) === 0) return "❌ Not invertible";
+  if (determinant(A) === 0) throw new Error("❌ Not invertible");
 
   let M = A.map((r, i) => [
     ...r,
@@ -102,7 +102,6 @@ function inverse(A) {
           break;
         }
       }
-      if (swapRow === -1) return "❌ Not invertible";
       [M[i], M[swapRow]] = [M[swapRow], M[i]];
     }
     let pivot = M[i][i];
@@ -176,84 +175,94 @@ function formatResult(result) {
   return `<pre>${JSON.stringify(result, null, 2)}</pre>`;
 }
 
-const generateBtn = document.getElementById("generate");
+const generateNullBtn = document.getElementById("generate-null");
+const generateRandomBtn = document.getElementById("generate-random");
 const computeBtn = document.getElementById("compute");
 const clearBtn = document.getElementById("clear");
 const operationSelect = document.getElementById("operation");
 const matrixInputs = document.getElementById("matrix-inputs");
+const matrixResults = document.getElementById("matrix-result");
 const resultDiv = document.getElementById("result");
+const $rowsA = document.getElementById("rowsA");
+const $colsA = document.getElementById("colsA");
+const $rowsB = document.getElementById("rowsB");
+const $colsB = document.getElementById("colsB");
 
 function toggleMatrixBInputs(op) {
   const show = op === "multiply" || op === "solve";
-  document.getElementById("matrixB-dimensions").style.display = show ? "block" : "none";
+  document.getElementById("matrixB-dimensions").style.display = show ? "" : "none";
 }
 
 operationSelect.addEventListener("change", () => {
   toggleMatrixBInputs(operationSelect.value);
 });
 
-generateBtn.addEventListener("click", () => {
-  const rowsA = +document.getElementById("rowsA").value;
-  const colsA = +document.getElementById("colsA").value;
-  const rowsB = +document.getElementById("rowsB").value;
-  const colsB = +document.getElementById("colsB").value;
+function generateHandler(random = false) {
+  const rowsA = +$rowsA.value;
+  const colsA = +$colsA.value;
   const op = operationSelect.value;
 
-  let html = generateMatrixInputs(rowsA, colsA, "A");
+  let html = generateMatrixInputs(rowsA, colsA, "A", random);
   if (op === "multiply" || op === "solve") {
-    html += generateMatrixInputs(rowsB, colsB, "B");
+    const rowsB = +$rowsB.value;
+    const colsB = +$colsB.value;
+    html += generateMatrixInputs(rowsB, colsB, "B", random);
   }
   matrixInputs.innerHTML = html;
-});
+  matrixResults.hidden = matrixInputs.hidden = false;
+}
+
+generateNullBtn.addEventListener("click", () => generateHandler());
+generateRandomBtn.addEventListener("click", () => generateHandler(true));
 
 computeBtn.addEventListener("click", () => {
   const op = operationSelect.value;
-  const rowsA = +document.getElementById("rowsA").value;
-  const colsA = +document.getElementById("colsA").value;
-  const rowsB = +document.getElementById("rowsB").value;
-  const colsB = +document.getElementById("colsB").value;
+  const rowsA = +$rowsA.value;
+  const colsA = +$colsA.value;
+  const rowsB = +$rowsB.value;
+  const colsB = +$colsB.value;
 
   let result;
 
   try {
     const A = readMatrix(rowsA, colsA, "A");
 
-    if (op === "multiply") {
-      if (colsA !== rowsB) throw new Error("❌ Invalid dimensions for multiplication!");
-      const B = readMatrix(rowsB, colsB, "B");
-      result = multiply(A, B);
+    switch (op) {
+      case "multiply":
+        if (colsA !== rowsB) throw new Error("❌ Invalid dimensions for multiplication!");
+        const B_mul = readMatrix(rowsB, colsB, "B");
+        result = multiply(A, B_mul);
+        break;
 
-    } else if (op === "det") {
-      if (rowsA !== colsA) throw new Error("❌ Not a square matrix!");
-      result = determinant(A);
+      case "det":
+        if (rowsA !== colsA) throw new Error("❌ Not a square matrix!");
+        result = determinant(A);
+        break;
 
-    } else if (op === "inverse") {
-      if (rowsA !== colsA) throw new Error("❌ Not a square matrix!");
-      const inv = inverse(A);
-      result = inv || "❌ Not invertible";
+      case "inverse":
+        if (rowsA !== colsA) throw new Error("❌ Not a square matrix!");
+        result = inverse(A);
+        break;
 
-    } else if (op === "solve") {
-      const B = readMatrix(rowsB, colsB, "B");
-      if (rowsA !== rowsB || colsB !== 1) {
-        throw new Error("❌ For solving, B must be a column vector with same row count as A!");
-      }
-      result = solve(A, B);
+      case "solve":
+        if (rowsA !== rowsB || colsB !== 1) throw new Error("❌ For solving, B must be a column vector with same row count as A!");
+        const B_solve = readMatrix(rowsB, colsB, "B");
+        result = solve(A, B_solve);
+        break;
+
+      default:
+        throw new Error("❌ Unknown operation!");
     }
   } catch (e) {
     result = e.message;
   }
-
   resultDiv.innerHTML = formatResult(result);
 });
 
 // Clear Buttons
 clearBtn.addEventListener("click", () => {
-  document.getElementById("rowsA").value = 2;
-  document.getElementById("colsA").value = 2;
-  document.getElementById("rowsB").value = 2;
-  document.getElementById("colsB").value = 2;
-  operationSelect.value = "multiply";
-  toggleMatrixBInputs("multiply");
+  $rowsA.value = $colsA.value = $rowsB.value = $colsB.value = 2;
   matrixInputs.innerHTML = "";
   resultDiv.innerHTML = "";
+  matrixResults.hidden = matrixInputs.hidden = true;
 });
